@@ -21,17 +21,26 @@ def generate_numerators():
     return answer
 
 
-def generate_two_digit_numbers_with_shared_digit(x):
-    assert 10 <= x <= 98
+def get_numbers_with_shared_digit(seed_num):
+    """
+    :param seed_num: a two-digit number from which we'll generate all two-digit
+    numbers that share at least one digit with x
+    :return: answer - a set of all two-digit numbers that share at least one
+    digit with seed_num
+    """
+    assert 10 <= seed_num <= 99, 'Input must be two digits long'
 
-    tens_digit = x / 10
-    ones_digit = x % 10
+    tens_digit = seed_num / 10
+    ones_digit = seed_num % 10
 
     # TODO: clean this up with DRY
     # TODO: perfect candidate for unit testing
     answer = [tens_digit * 10 + i for i in range(0, 10)]
     answer += [i*10 + tens_digit for i in range(1, 10)]
-    answer += [ones_digit * 10 + i for i in range(0, 10)]
+
+    if ones_digit > 0:
+        answer += [ones_digit * 10 + i for i in range(0, 10)]
+
     answer += [i*10 + ones_digit for i in range(1, 10)]
     answer = set(answer)
 
