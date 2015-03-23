@@ -15,12 +15,6 @@ the value of the denominator.
 __author__ = 'Scott'
 
 
-def generate_numerators():
-    answer = [i for i in range(12, 99) if i % 11 != 0]
-
-    return answer
-
-
 def get_numbers_with_shared_digit(seed_num):
     """
     :param seed_num: a two-digit number from which we'll generate all two-digit
@@ -52,9 +46,19 @@ def generate_denoms_by_num(nums):
     raise NotImplementedError
 
     for num in nums:
+        possible_nums = generate_denoms_by_num(num)
         answer[num] = [i for i in range(13, 99)]
     return answer
 
+
 if __name__ == '__main__':
-    nums = generate_numerators()
+
+    # all possible numerators are two-digit numbers not divisible by 11
+    nums = [i for i in range(12, 99) if i % 11 != 0]
+
+    # for each numerator, get its possible denominators
+    #   mainly meaning two-digit numbers with at least one shared digit
+    #   also numerator must be < denominator
+    #   also if numerator is divisible by 10, denominator can't be
+
     denoms_by_num = generate_denoms_by_num(nums)
