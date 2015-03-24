@@ -53,7 +53,25 @@ def get_numbers_with_shared_digit(seed_num):
     return answer
 
 
-def generate_denoms_by_num(nums):
+def generate_denoms_for_num(numerator):
+    """
+    generate the possible denominators for each numerator
+    :param numerator: a two-digit number
+    :return: answer - all possible denominators for that numerator in this
+    problem
+    """
+
+    # get all two-digit numbers with a shared digit
+    possibles = get_numbers_with_shared_digit(numerator)
+    assert isinstance(possibles, set)
+
+    # then reduce to only those > num
+    possibles = [denom for denom in possibles if denom > numerator]
+    assert isinstance(possibles, list)
+
+    return answer
+
+def generate_denoms_for_nums(nums):
     """
     generate the possible denominators for each numerator
     :param nums: a list of the possible numerators
@@ -61,11 +79,12 @@ def generate_denoms_by_num(nums):
     lists of the possible denominators
     """
     answer = {}
+    # TODO: create tests
     raise NotImplementedError
 
     for num in nums:
-        possible_nums = generate_denoms_by_num(num)
-        answer[num] = [i for i in range(13, 99)]
+        answer[num] = generate_denoms_for_num(num)
+
     return answer
 
 
