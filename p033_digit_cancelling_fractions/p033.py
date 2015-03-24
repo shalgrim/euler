@@ -57,9 +57,12 @@ def generate_denoms_for_num(numerator):
     """
     generate the possible denominators for each numerator
     :param numerator: a two-digit number
-    :return: answer - all possible denominators for that numerator in this
+    :return: possibles - all possible denominators for that numerator in this
     problem
     """
+
+    assert isinstance(numerator, int)
+    assert 10 <= numerator <= 99
 
     # get all two-digit numbers with a shared digit
     possibles = get_numbers_with_shared_digit(numerator)
@@ -69,7 +72,14 @@ def generate_denoms_for_num(numerator):
     possibles = [denom for denom in possibles if denom > numerator]
     assert isinstance(possibles, list)
 
-    return answer
+    # then remove those divisible by 11
+    possibles = [denom for denom in possibles if denom % 11 != 0]
+
+    # then remove those divisible by 10 if numerator is divisible by 10
+    if numerator % 10 == 0:
+        possibles = [denom for denom in possibles if denom % 10 != 0]
+
+    return possibles
 
 def generate_denoms_for_nums(nums):
     """
@@ -80,7 +90,6 @@ def generate_denoms_for_nums(nums):
     """
     answer = {}
     # TODO: create tests
-    raise NotImplementedError
 
     for num in nums:
         answer[num] = generate_denoms_for_num(num)
@@ -98,4 +107,6 @@ if __name__ == '__main__':
     #   also numerator must be < denominator
     #   also if numerator is divisible by 10, denominator can't be
 
-    denoms_by_num = generate_denoms_by_num(nums)
+    denoms_by_num = generate_denoms_for_nums(nums)
+
+
