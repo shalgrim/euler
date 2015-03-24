@@ -5,11 +5,15 @@ __author__ = 'Scott'
 
 
 class TestGet_numbers_with_shared_digit_success(TestCase):
+    def test_AssertionError_on_string(self):
+        self.assertRaises(AssertionError, get_numbers_with_shared_digit,'23')
+        return
+
     def test_AssertionError_if_too_small(self):
         self.assertRaises(AssertionError, get_numbers_with_shared_digit, 9)
         return
 
-    def test_AssertionError_if_too_small(self):
+    def test_AssertionError_if_too_large(self):
         self.assertRaises(AssertionError, get_numbers_with_shared_digit, 100)
         return
 

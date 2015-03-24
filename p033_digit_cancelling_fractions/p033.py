@@ -15,6 +15,22 @@ the value of the denominator.
 __author__ = 'Scott'
 
 
+def get_two_digit_nums_from_single_digit(single_digit):
+    """
+    Produce a list of all two-digit numbers that have at least one digit
+    equal to single_digit
+    :param single_digit: a digit between 0 and 9 inclusive
+    :return: answer - list of all two-digit numbers that have single_digit in them
+    """
+    assert isinstance(single_digit, int)
+    assert 0 <= single_digit <= 9
+    answer = {i*10 + single_digit for i in range(1, 10)}
+
+    if single_digit > 0:
+        answer.update({single_digit * 10 + i for i in range(0, 10)})
+
+    return answer
+
 def get_numbers_with_shared_digit(seed_num):
     """
     :param seed_num: a two-digit number from which we'll generate all two-digit
@@ -22,26 +38,28 @@ def get_numbers_with_shared_digit(seed_num):
     :return: answer - a set of all two-digit numbers that share at least one
     digit with seed_num
     """
-    assert 10 <= seed_num <= 99, 'Input must be two digits long'
+    assert isinstance(seed_num, int)
+    assert 10 <= seed_num <= 99, 'Input must be two digits long; input: ' \
+                                                        '{}'.format(seed_num)
 
     tens_digit = seed_num / 10
     ones_digit = seed_num % 10
 
-    # TODO: clean this up with DRY
-    # TODO: perfect candidate for unit testing
-    answer = [tens_digit * 10 + i for i in range(0, 10)]
-    answer += [i*10 + tens_digit for i in range(1, 10)]
+    answer = get_two_digit_nums_from_single_digit(tens_digit)
+    answer.update(get_two_digit_nums_from_single_digit(ones_digit))
 
-    if ones_digit > 0:
-        answer += [ones_digit * 10 + i for i in range(0, 10)]
-
-    answer += [i*10 + ones_digit for i in range(1, 10)]
     answer = set(answer)
 
     return answer
 
 
 def generate_denoms_by_num(nums):
+    """
+    generate the possible denominators for each numerator
+    :param nums: a list of the possible numerators
+    :return: answer - a dict whose keys are numerators and whose values are
+    lists of the possible denominators
+    """
     answer = {}
     raise NotImplementedError
 
