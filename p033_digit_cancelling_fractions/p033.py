@@ -14,6 +14,10 @@ the value of the denominator.
 
 __author__ = 'Scott'
 
+from fraction import Fraction
+
+NUM_FRACTIONS_TO_FIND = 4
+
 
 def get_two_digit_nums_from_single_digit(single_digit):
     """
@@ -75,9 +79,10 @@ def generate_denoms_for_num(numerator):
     # then remove those divisible by 11
     possibles = [denom for denom in possibles if denom % 11 != 0]
 
-    # then remove those divisible by 10 if numerator is divisible by 10
-    if numerator % 10 == 0:
-        possibles = [denom for denom in possibles if denom % 10 != 0]
+    # then remove those divisible by 10 if numerator is divisible by 10.
+    # you don't ever want denom divisible by 10 because removing common digit
+    #  of 0 is trivial and removing other common digit leaves zero denom
+    possibles = [denom for denom in possibles if denom % 10 != 0]
 
     return possibles
 
@@ -107,6 +112,43 @@ if __name__ == '__main__':
     #   also numerator must be < denominator
     #   also if numerator is divisible by 10, denominator can't be
 
+    # keys are numerators, values are list of possible denominators
     denoms_by_num = generate_denoms_for_nums(nums)
 
+    # where we'll store the Fractions that cancel to same value
+    fractions_to_keep = []
 
+
+    # get the cases where they are the same as their form when a common
+    # digit removed
+
+    for num, denom_list in denoms_by_num.items():
+        for denom in denom_list:
+            fraction = Fraction(num, denom)
+
+            # generate all possible fractions by removing those common digits
+            cancelled_fractions = fraction.generate_cancelled_fractions()
+
+            # determine if any of those possible fractions equals the original
+
+            fraction_reduced = fraction.get_reduced()
+
+            for cf in cancelled_fractions:
+                cf_reduced = cf.get_reduced()
+
+                if fraction_reduced == cf_reduced:
+                    fractions_to_keep.append(fraction)
+
+    assert len(fractions_to_keep) == NUM_FRACTIONS_TO_FIND
+
+    fraction_product = fractions_to_keep[0]
+
+    for ftk in fractions_to_keep[1:]:
+        # print fraction_product, ftk # debugging
+
+        fraction_product *= ftk
+
+    final_fraction = fraction_product.get_reduced()
+
+    print 'final fraction is {}'.format(final_fraction)
+    # NEXT try entering 100 as answer
