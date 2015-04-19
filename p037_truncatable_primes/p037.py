@@ -83,7 +83,13 @@ if __name__ == '__main__':
     # ATTEMPT #2
     # Trying to generate candidates based on what possible digits can go where
 
+    candidate_length = 1
     for candidate in generate_truncatable_prime_candidates():
+        if len(str(candidate)) > candidate_length:
+            candidate_length = len(str(candidate))
+            print 'new candidate length {}'.format(candidate_length)
+
+        if candidate == 739397: print 'checking 739397'
         if prime_checker.is_truncatable_prime(candidate):
             print 'adding truncatable prime: {}'.format(candidate)
             truncatable_primes.add(candidate)
