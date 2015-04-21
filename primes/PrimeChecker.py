@@ -40,51 +40,6 @@ class PrimeChecker(object):
     
         return self.get_highest_n_checked()
 
-    def is_prime(self, n):
-        assert isinstance(n, int)
-
-        if n < 2:
-            return False
-
-        if n in self.get_known_primes():
-            return True
-
-        # at this point I have already checked and it's not a prime
-        if n < self.get_highest_n_checked():
-            return False
-
-        return self._is_prime(n)
-
-    def _is_prime(self, n):
-        """
-        Assume n >= 2 and n is int
-        """
-
-        halfway_point = n / 2
-        highest = self.get_highest_n_checked()
-
-        # first check all the known primes through highest
-        for kp in self.get_sorted_known_primes():
-            if n % kp == 0:
-                # print >> sys.stderr, 'divisible by known prime {}'.format(kp)
-                return False
-
-        # then check all from highest through halfway_point
-        for i in range(highest + 1, halfway_point + 1):
-            if self.is_prime(i):
-                if n % i == 0:
-                    # print >> sys.stderr, 'divisible by new prime {}'.format(i)
-                    return False
-
-        self._set_highest_n_checked(halfway_point)
-        assert n not in self._known_primes
-        self.add_prime(n)
-        return True
-
-    # going to retry clever way since doing it the way below breaks problem 41
-    # NB: the clever way works, but it took way longer for p037 to finish
-    # I'm not sure if p041 would still crash if I did it clever way but it
-    # almost certainly wouldn't finish in a minute
     # def is_prime(self, n):
     #     assert isinstance(n, int)
     #
@@ -94,7 +49,8 @@ class PrimeChecker(object):
     #     if n in self.get_known_primes():
     #         return True
     #
-    #     if n in self._known_non_primes:
+    #     # at this point I have already checked and it's not a prime
+    #     if n < self.get_highest_n_checked():
     #         return False
     #
     #     return self._is_prime(n)
@@ -103,13 +59,61 @@ class PrimeChecker(object):
     #     """
     #     Assume n >= 2 and n is int
     #     """
-    #     for i in range(2, n):
-    #         if n%i == 0:
-    #             self._known_non_primes.add(n)
+    #
+    #     halfway_point = n / 2
+    #     highest = self.get_highest_n_checked()
+    #
+    #     # first check all the known primes through highest
+    #     for kp in self.get_sorted_known_primes():
+    #         if n % kp == 0:
+    #             # print >> sys.stderr, 'divisible by known prime {}'.format(kp)
     #             return False
     #
+    #     # then check all from highest through halfway_point
+    #     for i in xrange(highest + 1, halfway_point + 1):
+    #         if self.is_prime(i):
+    #             if n % i == 0:
+    #                 # print >> sys.stderr, 'divisible by new prime {}'.format(i)
+    #                 return False
+    #
+    #     self._set_highest_n_checked(halfway_point)
+    #     assert n not in self._known_primes
     #     self.add_prime(n)
     #     return True
+
+    # going to retry clever way since doing it the way below breaks problem 41
+    # NB: the clever way works, but it took way longer for p037 to finish
+    # I'm not sure if p041 would still crash if I did it clever way but it
+    # almost certainly wouldn't finish in a minute
+    # Later: Learned that p041 was crashing because I should have been using
+    # xrange and also shouldn't have even been bothering with nine-digit
+    # pandigitals
+    # so going back to brute force way for p041
+    def is_prime(self, n):
+        assert isinstance(n, int)
+
+        if n < 2:
+            return False
+
+        if n in self.get_known_primes():
+            return True
+
+        if n in self._known_non_primes:
+            return False
+
+        return self._is_prime(n)
+
+    def _is_prime(self, n):
+        """
+        Assume n >= 2 and n is int
+        """
+        for i in range(2, n):
+            if n%i == 0:
+                self._known_non_primes.add(n)
+                return False
+
+        self.add_prime(n)
+        return True
 
     def is_truncatable_prime(self, n):
         assert isinstance(n, int)
