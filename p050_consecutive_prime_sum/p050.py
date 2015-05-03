@@ -12,12 +12,19 @@ Which prime, below one-million, can be written as the sum of the most
 consecutive primes?
 """
 
+import sys
 from copy import copy
 from primes.primes import prime_generator
 from primes.PrimeChecker import PrimeChecker
 
 __author__ = 'Scott'
 
+NEGATIVE_ONE = -1
+ZERO = 0
+ONE = 1
+TWO = 2
+ONE_HUNDRED = 100
+ONE_THOUSAND = 1000
 ONE_MILLION = 1000000
 
 # def get_longest_consec_prime_sum_under_n_starting_with_k(n, k):
@@ -47,31 +54,48 @@ ONE_MILLION = 1000000
 
 
 if __name__ == '__main__':
-    # let's assume two things
-    # first, let's assume I have a list of all the primes <= the first prime
-    # number greater than 500,000
     all_primes_list = []
-
-    # second, let's assume I'm only trying to find the longest consecutive
-    # list starting from some known prime. let's say the index of that prime
-    # is k
-    k = 2 # for now
-    i = k
-    current_sum = all_primes_list[k]
-    longest_list = all_primes_list[k:i+1]
     pc = PrimeChecker()
+    pg = prime_generator(ONE_MILLION)
 
-    while current_sum < ONE_MILLION:
-        i += 1
-        current_sum += all_primes_list[i]
-        if pc.is_prime(current_sum):
-            longest_list = all_primes_list[k:i+1]
+    start_prime_idx = NEGATIVE_ONE
+    start_prime = NEGATIVE_ONE
+    overall_longest_length = ZERO
 
-    # invariant: longest_list holds longest list starting at k
-    # next: figure out how to integrate the generator and start from
-    # different k's
+    while start_prime < ONE_THOUSAND:
+        start_prime_idx += 1
 
+        try:
+            start_prime = all_primes_list[start_prime_idx]
+        except IndexError:
+            all_primes_list.append(pg.next())
+            start_prime = all_primes_list[start_prime_idx]
 
+        current_sum = start_prime
+        current_longest_list = [start_prime]
+        next_prime_idx = start_prime_idx
+
+        while current_sum < ONE_MILLION:
+            next_prime_idx += 1
+
+            try:
+                current_sum += all_primes_list[next_prime_idx]
+            except IndexError:
+                all_primes_list.append(pg.next())
+                current_sum += all_primes_list[next_prime_idx]
+
+            if current_sum < 100 and pc.is_prime(current_sum):
+                current_longest_list = all_primes_list[start_prime_idx :
+                                                       next_prime_idx+ONE]
+
+        # invariant: longest_list holds longest list starting at k
+        print 'longest list start at {} is {}'.format(start_prime, len(current_longest_list))
+        if len(current_longest_list) > overall_longest_length:
+            overall_longest_length = len(current_longest_list)
+            overall_longest_sum = sum(current_longest_list)
+
+    print 'overall longest sums to {}'.format(overall_longest_sum)
+    sys.exit()
     # just me playin' around below here
     num_primes = 0
     for p in prime_generator(ONE_MILLION):
