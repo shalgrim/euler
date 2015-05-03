@@ -62,7 +62,7 @@ if __name__ == '__main__':
     start_prime = NEGATIVE_ONE
     overall_longest_length = ZERO
 
-    while start_prime < ONE_THOUSAND:
+    while start_prime < ONE_MILLION:
         start_prime_idx += 1
 
         try:
@@ -84,12 +84,13 @@ if __name__ == '__main__':
                 all_primes_list.append(pg.next())
                 current_sum += all_primes_list[next_prime_idx]
 
-            if current_sum < 100 and pc.is_prime(current_sum):
+            if current_sum < ONE_MILLION and pc.is_prime(current_sum):
                 current_longest_list = all_primes_list[start_prime_idx :
                                                        next_prime_idx+ONE]
 
         # invariant: longest_list holds longest list starting at k
-        print 'longest list start at {} is {}'.format(start_prime, len(current_longest_list))
+        print 'longest list start at {} is {} long and sums to {}'.format(
+            start_prime, len(current_longest_list), sum(current_longest_list))
         if len(current_longest_list) > overall_longest_length:
             overall_longest_length = len(current_longest_list)
             overall_longest_sum = sum(current_longest_list)
