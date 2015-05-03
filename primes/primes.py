@@ -1,8 +1,6 @@
 __author__ = 'Scott'
 
 
-from PrimeChecker import PrimeChecker
-
 def prime_generator(n):
     """
     generates primes less than n in order
@@ -20,6 +18,29 @@ def prime_generator(n):
         else:
             known_primes.append(i)
             yield i
+
+class JustInTimePrimes(object):
+
+    def __init__(self, n):
+        self.pg = prime_generator(n)
+        self.prime_list = []
+        return
+
+    def __getitem__(self, a):
+        while len(self.prime_list) <= a:
+            self.prime_list.append(self.pg.next())
+
+        return self.prime_list[a]
+
+    def __getslice__(self, a, b):
+        while len(self.prime_list) <= b:
+            try:
+                self.prime_list.append(self.pg.next())
+            except StopIteration:
+                pass
+
+        return self.prime_list[a:b]
+
 
 # def prime_generator_from(n, k):
 #     """

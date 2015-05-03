@@ -13,19 +13,68 @@ consecutive primes?
 """
 
 import sys
-from copy import copy
-from primes.primes import prime_generator
+from constants import *
+from primes.primes import JustInTimePrimes
 from primes.PrimeChecker import PrimeChecker
 
 __author__ = 'Scott'
 
-NEGATIVE_ONE = -1
-ZERO = 0
-ONE = 1
-TWO = 2
-ONE_HUNDRED = 100
-ONE_THOUSAND = 1000
-ONE_MILLION = 1000000
+RUN_TO = ONE_MILLION
+
+if __name__ == '__main__':
+    pc = PrimeChecker()
+    all_primes = JustInTimePrimes(TEN_MILLION)
+
+    start_prime_idx = ZERO
+    start_prime = all_primes[start_prime_idx]
+    overall_longest_length = ZERO
+    next_prime_idx = start_prime_idx + overall_longest_length
+    next_prime = all_primes[next_prime_idx]
+    initial_sum = ZERO
+
+    while initial_sum < RUN_TO:
+
+        current_longest_list = \
+            all_primes[start_prime_idx : next_prime_idx]
+
+        current_sum = sum(current_longest_list)
+        next_prime_idx = start_prime_idx + overall_longest_length
+        found_longer = False
+
+        while current_sum < RUN_TO:
+
+            if pc.is_prime(current_sum):
+                found_longer = True
+                current_longest_list = all_primes[start_prime_idx :
+                                                  next_prime_idx]
+
+            current_sum += all_primes[next_prime_idx]
+            next_prime_idx += 1
+
+        if found_longer:
+            overall_longest_length = len(current_longest_list)
+            overall_longest_sum = sum(current_longest_list)
+            final_prime = current_longest_list[-1]
+            print 'found {} element list from {} to {} summing to {}'.format(
+                overall_longest_length, start_prime, final_prime,
+                overall_longest_sum
+            )
+
+        start_prime_idx += 1
+        start_prime = all_primes[start_prime_idx]
+        next_prime_idx = start_prime_idx + overall_longest_length
+        next_prime = all_primes[next_prime_idx]
+        initial_sum = sum(all_primes[start_prime_idx : next_prime_idx])
+        print start_prime, next_prime, initial_sum
+
+    print 'overall longest sums to {}'.format(overall_longest_sum)
+    sys.exit()
+    # just me playin' around below here
+    num_primes = 0
+    for p in prime_generator(ONE_MILLION):
+        num_primes += 1
+        print p
+    print num_primes
 
 # def get_longest_consec_prime_sum_under_n_starting_with_k(n, k):
 #     """
@@ -51,56 +100,3 @@ ONE_MILLION = 1000000
 #         if PRIME_CHECKER.is_prime(current_sum):
 #             longest_list = copy(current_list)
 #   BAILED OUT WHILE WRITING TO TAKE ANOTHER DIRECTION
-
-
-if __name__ == '__main__':
-    all_primes_list = []
-    pc = PrimeChecker()
-    pg = prime_generator(ONE_MILLION)
-
-    start_prime_idx = NEGATIVE_ONE
-    start_prime = NEGATIVE_ONE
-    overall_longest_length = ZERO
-
-    while start_prime < ONE_MILLION:
-        start_prime_idx += 1
-
-        try:
-            start_prime = all_primes_list[start_prime_idx]
-        except IndexError:
-            all_primes_list.append(pg.next())
-            start_prime = all_primes_list[start_prime_idx]
-
-        current_sum = start_prime
-        current_longest_list = [start_prime]
-        next_prime_idx = start_prime_idx
-
-        while current_sum < ONE_MILLION:
-            next_prime_idx += 1
-
-            try:
-                current_sum += all_primes_list[next_prime_idx]
-            except IndexError:
-                all_primes_list.append(pg.next())
-                current_sum += all_primes_list[next_prime_idx]
-
-            if current_sum < ONE_MILLION and pc.is_prime(current_sum):
-                current_longest_list = all_primes_list[start_prime_idx :
-                                                       next_prime_idx+ONE]
-
-        # invariant: longest_list holds longest list starting at k
-        print 'longest list start at {} is {} long and sums to {}'.format(
-            start_prime, len(current_longest_list), sum(current_longest_list))
-        if len(current_longest_list) > overall_longest_length:
-            overall_longest_length = len(current_longest_list)
-            overall_longest_sum = sum(current_longest_list)
-
-    print 'overall longest sums to {}'.format(overall_longest_sum)
-    sys.exit()
-    # just me playin' around below here
-    num_primes = 0
-    for p in prime_generator(ONE_MILLION):
-        num_primes += 1
-        print p
-    print num_primes
-
