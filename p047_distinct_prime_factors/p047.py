@@ -14,8 +14,8 @@ Find the first four consecutive integers to have four distinct prime factors.
 What is the first of these numbers?
 """
 
+import datetime
 from primes.prime_factorizer import PrimeFactorizer
-import sys
 
 __author__ = 'Scott'
 
@@ -23,22 +23,32 @@ NUM_PRIME_FACTORS = 4
 
 if __name__ == '__main__':
 
+    starttime = datetime.datetime.now()
+
     candidate = 1
     consecutive_found = 0
 
     while consecutive_found < NUM_PRIME_FACTORS:
         candidate += 1
 
-        if candidate % 10000 == 0:
-            print candidate # debugging
-
-        if len(set(PrimeFactorizer.factor_method2(candidate))) >= \
+        if len(set(PrimeFactorizer.factor_method1(candidate))) >= \
                 NUM_PRIME_FACTORS:
             consecutive_found += 1
         else:
             consecutive_found = 0
 
+    endtime = datetime.datetime.now()
+
     print 'answer: {}'.format(candidate + 1 - NUM_PRIME_FACTORS)
+    print 'timing: {}'.format(endtime - starttime)
+
+    # took 2:52 with method2
+    # took 3:07 with method1
+    # So I think next steps are to make sure method1 is working correctly as
+    # it should be saving us considerable time
+    # alternatively do something where you cache known primes as generating
+    # those may be part of the problem
+    # so could do some profiling to look at that
 
 
 
