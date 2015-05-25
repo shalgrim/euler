@@ -22,14 +22,16 @@ __author__ = 'Scott'
 if __name__ == '__main__':
 
     candidates = [1, 2, 3, 4]
+    increase_by = 1
     while True:
-        candidates = [c+1 for c in candidates]
+        candidates = [c+increase_by for c in candidates]
         if candidates[0] % 10000 == 0: print candidates[0] # debugging
 
-        for candidate in candidates:
-            if len(set(PrimeFactorizer.factor(candidate))) >= 4:
+        for i, candidate in enumerate(candidates):
+            if len(set(PrimeFactorizer.factor_method2(candidate))) >= 4:
                 continue
             else:
+                increase_by = i + 1
                 break
 
         else:

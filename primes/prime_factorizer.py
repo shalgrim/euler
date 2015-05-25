@@ -12,12 +12,14 @@ class PrimeFactorizer(object):
     known_factorizations = {}
 
     @classmethod
-    def factor(cls, n):
+    def factor_method1(cls, n):
         answer = cls._factor(n, [])
 
         return answer
 
 
+    @classmethod
+    def factor_method2(cls, n):
         factors = []
         reduced = n
 
@@ -28,7 +30,6 @@ class PrimeFactorizer(object):
 
         factors.append(reduced)
         factors.sort()
-        PrimeFactorizer.known_factorizations[n] = factors
         return factors
 
     @classmethod
