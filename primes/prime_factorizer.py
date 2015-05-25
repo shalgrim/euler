@@ -1,5 +1,6 @@
 __author__ = 'Scott'
 
+from primes import prime_generator
 from PrimeChecker import PrimeChecker
 
 class PrimeFactorizer(object):
@@ -12,9 +13,10 @@ class PrimeFactorizer(object):
 
     @classmethod
     def factor(cls, n):
-        assert isinstance(n, int), 'factorize only accepts int input'
-        if n in PrimeFactorizer.known_factorizations:
-            return PrimeFactorizer.known_factorizations[n]
+        answer = cls._factor(n, [])
+
+        return answer
+
 
         factors = []
         reduced = n
@@ -29,6 +31,24 @@ class PrimeFactorizer(object):
         PrimeFactorizer.known_factorizations[n] = factors
         return factors
 
+    @classmethod
+    def _factor(cls, n, factors):
+        assert isinstance(n, int)
+        assert isinstance(factors, list)
+
+        if n in PrimeFactorizer.known_factorizations:
+            return factors + PrimeFactorizer.known_factorizations[n]
+
+        if cls.pc.is_prime(n):
+            cls.known_factorizations[n] = [n]
+            factors.append(n)
+            return factors
+
+        smallest_prime = cls._find_smallest_prime(n)
+        factors.append(smallest_prime)
+        reduced = n / smallest_prime
+        return cls._factor(reduced, factors)
+
 
     @classmethod
     def _find_smallest_prime(cls, n):
@@ -37,6 +57,10 @@ class PrimeFactorizer(object):
         if cls.pc.is_prime(n):
             return n
 
+        pg = prime_generator(n)
 
+        for prime in pg:
+            if n % prime == 0:
+                return prime
 
-
+        raise Exception, 'no smallest prime found'
