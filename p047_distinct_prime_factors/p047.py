@@ -19,24 +19,28 @@ import sys
 
 __author__ = 'Scott'
 
+NUM_PRIME_FACTORS = 4
+
 if __name__ == '__main__':
 
-    candidates = [1, 2, 3, 4]
-    increase_by = 1
-    while True:
-        candidates = [c+increase_by for c in candidates]
-        if candidates[0] % 10000 == 0: print candidates[0] # debugging
+    candidate = 1
+    consecutive_found = 0
 
-        for i, candidate in enumerate(candidates):
-            if len(set(PrimeFactorizer.factor_method2(candidate))) >= 4:
-                continue
-            else:
-                increase_by = i + 1
-                break
+    while consecutive_found < NUM_PRIME_FACTORS:
+        candidate += 1
 
+        if candidate % 10000 == 0:
+            print candidate # debugging
+
+        if len(set(PrimeFactorizer.factor_method2(candidate))) >= \
+                NUM_PRIME_FACTORS:
+            consecutive_found += 1
         else:
-            print 'answer: {}'.format(candidates[0])
-            sys.exit()
+            consecutive_found = 0
+
+    print 'answer: {}'.format(candidate + 1 - NUM_PRIME_FACTORS)
+
+
 
 
 
