@@ -1,6 +1,5 @@
 __author__ = 'Scott'
 
-
 def prime_generator(n):
     """
     generates primes less than n in order
@@ -18,6 +17,7 @@ def prime_generator(n):
         else:
             known_primes.append(i)
             yield i
+
 
 class JustInTimePrimes(object):
 
