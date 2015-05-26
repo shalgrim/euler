@@ -3,8 +3,8 @@ __author__ = 'Scott'
 def prime_generator(n):
     """
     generates primes less than n in order
-    :param n: upper limit of possible primes, non-inclusive
-    :return: yields each prime < n
+    :param n: upper limit of possible primes, inclusive
+    :return: yields each prime <= n
     """
     known_primes = []
     i = 1

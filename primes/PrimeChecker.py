@@ -1,4 +1,4 @@
-import sys
+from project_euler.primes.primes import prime_generator
 
 class PrimeChecker(object):
     """provides functionality for checking if number is prime also caches known primes"""
@@ -107,8 +107,8 @@ class PrimeChecker(object):
         """
         Assume n >= 2 and n is int
         """
-        for i in range(2, n):
-            if n%i == 0:
+        for prime in prime_generator(n-1):
+            if n % prime == 0:
                 self._known_non_primes.add(n)
                 return False
 
