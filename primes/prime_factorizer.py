@@ -48,7 +48,9 @@ class PrimeFactorizer(object):
         smallest_prime = cls._find_smallest_prime(n)
         factors.append(smallest_prime)
         reduced = n / smallest_prime
-        return cls._factor(reduced, factors)
+        answer = cls._factor(reduced, factors)
+        cls.known_factorizations[n] = answer
+        return answer
 
 
     @classmethod

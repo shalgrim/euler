@@ -43,9 +43,9 @@ if __name__ == '__main__':
     print 'timing: {}'.format(endtime - starttime)
 
     # took 2:52 with method2
-    # took 3:07 with method1
-    # So I think next steps are to make sure method1 is working correctly as
-    # it should be saving us considerable time
+    # took 3:44 with method1, was only 3:07 before I "fixed" it
+
+    # ... maybe do profiling now
     # alternatively do something where you cache known primes as generating
     # those may be part of the problem
     # so could do some profiling to look at that
