@@ -29,3 +29,15 @@ __author__ = 'Scott'
 # So the first thing I want to do is write a find_arithmetic_sequence(nums, n)
 # method which will return all possible arithmetic sequences of length n from
 # the set(?) of numbers in nums
+
+# There should also be one method that just detects whether or not the
+# numbers provided do form an arithmetic sequence
+
+def is_arithmetic_sequence(nums):
+    assert isinstance(nums, list)
+
+    # TODO: Isn't there a slicker way to do this with map or apply or something?
+    for n in nums:
+        assert isinstance(n, int)
+
+
