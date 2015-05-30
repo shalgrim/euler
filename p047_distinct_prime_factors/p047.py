@@ -30,8 +30,8 @@ if __name__ == '__main__':
 
     while consecutive_found < NUM_PRIME_FACTORS:
         candidate += 1
-        # if candidate % 10000 == 0:
-        #     print candidate, datetime.datetime.now() - starttime # debugging
+        if candidate % 10000 == 0:
+            print candidate, datetime.datetime.now() - starttime # debugging
 
         if len(set(PrimeFactorizer.factor_method2(candidate))) >= \
                 NUM_PRIME_FACTORS:

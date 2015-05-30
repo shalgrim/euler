@@ -41,21 +41,3 @@ class JustInTimePrimes(object):
 
         return self.prime_list[a:b]
 
-
-# def prime_generator_from(n, k):
-#     """
-#     generates primes less than n in order starting with k
-#     :param n: upper limit of possible primes, non-inclusive
-#     :param k: first prime returned
-#     :return: yields each prime from k through n non-inclusive
-#     """
-#     known_primes = []
-#     pc = PrimeChecker()
-#     assert isinstance(n, int)
-#     assert isinstance(k, int)
-#     assert k < n
-#     assert pc.is_prime(k)
-#     i = k
-#     while i < n:
-#   BAILED OUT WHILE WRITING TO PURSUE ANOTHER DIRECTION
-
