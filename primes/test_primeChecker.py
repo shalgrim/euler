@@ -1,5 +1,5 @@
 from unittest import TestCase
-from primes.PrimeChecker import PrimeChecker
+from project_euler.primes.PrimeChecker import PrimeChecker
 
 __author__ = 'Scott'
 

@@ -15,7 +15,7 @@ What is the first of these numbers?
 """
 
 import datetime
-from primes.prime_factorizer import PrimeFactorizer
+from project_euler.primes.prime_factorizer import PrimeFactorizer
 
 __author__ = 'Scott'
 
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     while consecutive_found < NUM_PRIME_FACTORS:
         candidate += 1
 
-        if len(set(PrimeFactorizer.factor_method1(candidate))) >= \
+        if len(set(PrimeFactorizer.factor_method2(candidate))) >= \
                 NUM_PRIME_FACTORS:
             consecutive_found += 1
         else:
@@ -49,6 +49,22 @@ if __name__ == '__main__':
     # alternatively do something where you cache known primes as generating
     # those may be part of the problem
     # so could do some profiling to look at that
+
+    # 5/30/15
+    # just checked out this revision (d60a8278) and it takes 3:07 with method 1
+    # and 2:52 with method 2 so this is a good place to start over since I'd
+    # managed to make everything run slower in my changes after this
+
+    # So let's profile method2 again
+    # It says it's spending 165 seconds in _is_prime
+    # Let's make my first change changing range to xrange in that method
+
+    # That took it down to 72 seconds
+    # And it's still spending 64 seconds of that in _is_prime
+
+    # And then I got it by reworking _is_prime to keep track of a "starting
+    # point" of numbers where we don't know whether it's prime or not to
+    # start from instead of starting from 2 every time. it runs in 30 seconds
 
 
 
