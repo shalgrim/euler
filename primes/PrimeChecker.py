@@ -12,6 +12,7 @@ class PrimeChecker(object):
     @classmethod
     def get_known_primes(cls):
         return cls._known_primes
+        self._starting_point = 2
 
     @classmethod
     def get_sorted_known_primes(cls):
@@ -54,18 +55,47 @@ class PrimeChecker(object):
 
         return cls._is_prime(n)
 
-    @classmethod
-    def _is_prime(cls, n):
+    def unknown_generator(self, n):
+        """
+        Generates all integers x such that 2 <= x < n and x is not known to
+        be prime or non-prime (composite)
+        """
+
+        knowns = self.get_known_primes().union(self._known_non_primes)
+
+        for i in range(2, n):
+            if i not in knowns:
+                yield i
+
         """
         Assume n >= 2 and n is int
         """
-        for prime in prime_generator(n-1):
-            if n % prime == 0:
-                cls._known_non_primes.add(n)
-                return False
 
-        cls.add_prime(n)
-        return True
+        if self._is_divisible_by_known_prime(n):
+            answer = False
+
+        else:
+            for i in xrange(self._starting_point, n):
+                if n%i == 0:
+                    self._known_non_primes.add(n)
+                    answer = False
+                    break
+            else:
+                self.add_prime(n)
+                answer = True
+
+        if n == self._starting_point:
+            self._starting_point += 1
+
+        return answer
+
+    def _is_divisible_by_known_prime(self, n):
+        for p in self.get_sorted_known_primes():
+            if n%p == 0:
+                self._known_non_primes.add(n)
+                return True
+
+        return False
 
     @classmethod
     def is_truncatable_prime(cls, n):

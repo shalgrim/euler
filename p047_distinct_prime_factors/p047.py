@@ -56,20 +56,21 @@ if __name__ == '__main__':
     # those may be part of the problem
     # so could do some profiling to look at that
 
-    # I did some profiling and the single biggest time suck is
-    # PrimeChecker._is_prime at 85 seconds
+    # 5/30/15
+    # just checked out this revision (d60a8278) and it takes 3:07 with method 1
+    # and 2:52 with method 2 so this is a good place to start over since I'd
+    # managed to make everything run slower in my changes after this
 
-    # Ima profile method 2, which the last time took 3:20, but I had
-    # debugging prints in there
-    # results of that are that I spent almost all of my time, over three
-    # minutes, in _is_prime
+    # So let's profile method2 again
+    # It says it's spending 165 seconds in _is_prime
+    # Let's make my first change changing range to xrange in that method
 
-    # Well I tried to fix that and now that's taking forever (not sure it's
-    # ever going to finish)
-    # I think the problem is going to be in prime generator generating the
-    # same primes over and over again
-    # So the solution is going to be to cache known primes higher up in the
-    # solution
+    # That took it down to 72 seconds
+    # And it's still spending 64 seconds of that in _is_prime
+
+    # And then I got it by reworking _is_prime to keep track of a "starting
+    # point" of numbers where we don't know whether it's prime or not to
+    # start from instead of starting from 2 every time. it runs in 30 seconds
 
 
 
