@@ -10,6 +10,7 @@ class PrimeChecker(object):
         self._known_non_primes = set()
         self._known_primes_sorted = []
         self._highest_n_checked = 1
+        self._starting_point = 2
 
         return
 
@@ -103,17 +104,48 @@ class PrimeChecker(object):
 
         return self._is_prime(n)
 
+    def unknown_generator(self, n):
+        """
+        Generates all integers x such that 2 <= x < n and x is not known to
+        be prime or non-prime (composite)
+        """
+
+        knowns = self.get_known_primes().union(self._known_non_primes)
+
+        for i in range(2, n):
+            if i not in knowns:
+                yield i
+
     def _is_prime(self, n):
         """
         Assume n >= 2 and n is int
         """
-        for i in range(2, n):
-            if n%i == 0:
-                self._known_non_primes.add(n)
-                return False
 
-        self.add_prime(n)
-        return True
+        if self._is_divisible_by_known_prime(n):
+            answer = False
+
+        else:
+            for i in xrange(self._starting_point, n):
+                if n%i == 0:
+                    self._known_non_primes.add(n)
+                    answer = False
+                    break
+            else:
+                self.add_prime(n)
+                answer = True
+
+        if n == self._starting_point:
+            self._starting_point += 1
+
+        return answer
+
+    def _is_divisible_by_known_prime(self, n):
+        for p in self.get_sorted_known_primes():
+            if n%p == 0:
+                self._known_non_primes.add(n)
+                return True
+
+        return False
 
     def is_truncatable_prime(self, n):
         assert isinstance(n, int)
