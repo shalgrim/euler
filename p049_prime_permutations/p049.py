@@ -34,10 +34,31 @@ __author__ = 'Scott'
 # numbers provided do form an arithmetic sequence
 
 def is_arithmetic_sequence(nums):
+    """
+    determines if nums, when sorted, is an arithmetic sequence.
+    if len(nums) == 0: returns False
+    if 0 < len(nums) <= 2: returns True
+    :param nums: list of ints
+    :return: True if nums, when sorted, is an arithmetic sequence
+    """
     assert isinstance(nums, list)
 
-    # TODO: Isn't there a slicker way to do this with map or apply or something?
-    for n in nums:
-        assert isinstance(n, int)
+    # assert each element in nums is an int
+    assert all([isinstance(n, int) for n in nums])
+
+    if len(nums) > 2:
+        # sort them and get the differences as a list
+        nums.sort()
+        diffs = [nums[i+1] - n for i, n in enumerate(nums[:-1])]
+
+        # verify all the diffs are equal
+        answer = all([diffs[i+1] == d for i, d in enumerate(diffs[:-1])])
+    elif len(nums) > 0:
+        answer = True
+    else:   # len(nums) == 0
+        answer = False
+
+    return answer
+
 
 
