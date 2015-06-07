@@ -27,10 +27,10 @@ class TestIs_arithmetic_sequence(TestCase):
         self.assertFalse(is_arithmetic_sequence([]))
 
     def test_is_arithmetic_sequence_false_2(self):
-        self.assertTrue(is_arithmetic_sequence([1487, 4817, 8148]))
+        self.assertFalse(is_arithmetic_sequence([1487, 4817, 8148]))
 
     def test_is_arithmetic_sequence_error_1(self):
-        self.assertRaises(is_arithmetic_sequence(15), AssertionError)
+        self.assertRaises(AssertionError, is_arithmetic_sequence, 15)
 
     def test_is_arithmetic_sequence_error_2(self):
-        self.assertRaises(is_arithmetic_sequence([15, 7.5, 0]), AssertionError)
+        self.assertRaises(AssertionError, is_arithmetic_sequence, [15, 7.5, 0])
