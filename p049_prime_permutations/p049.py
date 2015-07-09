@@ -10,27 +10,12 @@ What 12-digit number do you form by concatenating the three terms in this
 sequence?
 """
 
-from constants import ONE
+from itertools import permutations, combinations
+from constants import ONE, MAIN_PROCESS, ONE_THOUSAND, TEN_THOUSAND
+from primes.primes import prime_generator
+from primes.PrimeChecker import PrimeChecker
 
 __author__ = 'Scott'
-
-# So I'm trying to find three four-digit numbers
-# And here are my constraints
-# 1) All three are prime
-# 2) All three are permutations of each other
-# 3) The three numbers make an arithmetic sequence, which means they increase by
-#    a set amount
-
-# Brute Force Approach:
-# For each prime 1000 <= x <= 9999
-#   generate its permutations
-#   if it has at least two other unique permutations
-#       if it has at least two other unique prime permutations
-#           Can you generate a sequence out of those three numbers?
-
-# So the first thing I want to do is write a find_arithmetic_sequence(nums, n)
-# method which will return all possible arithmetic sequences of length n from
-# the set(?) of numbers in nums
 
 
 def find_first_arithmetic_sequence(numset, n=3):
@@ -110,3 +95,54 @@ def is_arithmetic_sequence(nums):
         answer = False
 
     return answer
+
+
+def int_permutes(n):
+    """
+    wraps itertools.permutations in creating permutations of the digits of
+    an int
+    :param n: an int
+    :return: generator of the permutations of n
+    """
+    assert isinstance(n, int)
+    nstr = str(n)
+    digit_list = [c for c in nstr]
+
+    wrapped_generator = permutations(digit_list)
+
+    for digit_tuple in wrapped_generator:
+        yield int(''.join(digit_tuple))
+
+    raise StopIteration
+
+if __name__ == MAIN_PROCESS:
+
+
+    # So I'm trying to find three four-digit numbers
+    # And here are my constraints
+    # 1) All three are prime
+    # 2) All three are permutations of each other
+    # 3) The three numbers make an arithmetic sequence, which means they increase by
+    #    a set amount
+
+    # Brute Force Approach:
+    # For each prime 1000 <= x <= 9999
+
+    prime_gen = prime_generator(TEN_THOUSAND)
+    prime_checker = PrimeChecker()
+
+    for prime in prime_gen:
+        if prime < 1000:
+            continue
+
+        # get its list of prime permutations greater than 1000
+        unique_permutes = set([int(p) for p in int_permutes(prime) if
+                               int(p) >= 1000])
+        unique_prime_permutes = {up for up in unique_permutes if
+                                 prime_checker.is_prime(up)}
+
+        if len(unique_prime_permutes) >= 3:
+            for combo in combinations(unique_prime_permutes, 3):
+                answer = find_first_arithmetic_sequence(set(combo), 3)
+                if answer:
+                    print ''.join([str(a) for a in answer])
