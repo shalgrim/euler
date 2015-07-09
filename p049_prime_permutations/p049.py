@@ -10,6 +10,8 @@ What 12-digit number do you form by concatenating the three terms in this
 sequence?
 """
 
+from constants import ONE
+
 __author__ = 'Scott'
 
 # So I'm trying to find three four-digit numbers
@@ -29,6 +31,55 @@ __author__ = 'Scott'
 # So the first thing I want to do is write a find_arithmetic_sequence(nums, n)
 # method which will return all possible arithmetic sequences of length n from
 # the set(?) of numbers in nums
+
+
+def find_first_arithmetic_sequence(numset, n=3):
+    """
+
+    :param numset: a set of numbers
+    :param n: desired length of arithmetic sequence
+    :return: first identified arithmetic sequence of length n from numset, None
+        if none found
+    """
+
+    # input assertions
+    assert isinstance(numset, set)
+    assert isinstance(n, int)
+
+    sorted_nums = sorted(list(numset))
+
+    for num in sorted_nums:
+        assert isinstance(num, int)
+
+    # check impossible-to-find case
+    if len(sorted_nums) < n:
+        return None
+
+    # check trivial case
+    if len(sorted_nums) == n:
+        if is_arithmetic_sequence(sorted_nums):
+            return sorted_nums
+        else:
+            return None
+
+    # case where numset is longer than n
+    assert len(sorted_nums) > n
+
+    # last_start_ind is the last potential starting index for a sequence of
+    # length n
+    last_start_ind = len(sorted_nums) - n
+
+    sorted_nums = sorted(list(numset))
+
+    # check all possible sequences for being arithmetic sequence
+    for start_ind in range(last_start_ind + ONE):
+        potential_sequence = sorted_nums[start_ind : start_ind + n]
+
+        if is_arithmetic_sequence(potential_sequence):
+            return potential_sequence
+
+    # could not find arithmetic sequence
+    return None
 
 # There should also be one method that just detects whether or not the
 # numbers provided do form an arithmetic sequence
@@ -59,6 +110,3 @@ def is_arithmetic_sequence(nums):
         answer = False
 
     return answer
-
-
-

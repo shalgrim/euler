@@ -1,5 +1,6 @@
 __author__ = 'Scott'
 
+# ints
 NEGATIVE_ONE = -1
 ZERO = 0
 ONE = 1
