@@ -13,6 +13,7 @@ of D?
 """
 
 from constants import MAIN_PROCESS
+import math
 
 __author__ = 'Scott'
 
@@ -29,9 +30,46 @@ def compute_pentagonal(n):
     return (n * (3 * n - 1)) / 2
 
 
+def is_pentagonal(n):
+    """
+    Determines if n is a pentagonal number
+    :param n: int
+    :return True if n is pentagonal, False otherwise
+    """
+    # TODO: make some unit tests, because this is returning the wrong values
+    # TODO: move into a pentagonal module
+    assert isinstance(n, int), "n must be integer, you sent in {}".format(n)
+    assert n >=1, "n must be >= 1, you sent in {}".format(n)
+    r1, r2 = solve_quadratic(3.5, -1.5, -n)
+    # r1 will be my larger root
+    if r1 > 0 and r1 == int(r1):
+        return True
+    return False
+
+
+def solve_quadratic(a, b, c):
+    """
+    Solves quadratic equation
+    :param a: coefficient of x^2
+    :param b: coefficient of x^1
+    :param c: coefficient of x^0
+    :return (r1, r2): roots of quadratic equation
+    """
+    # TODO: make some unit tests
+    radicand = b**2 - 4*a*c
+    assert radicand >= 0, "We don't handle negative determinants"
+    root = math.sqrt(b**2-4*a*c) # seems to always return positive and float
+    denom = 2*a
+    r1 = (-b + root) / denom
+    r2 = (-b - root) / denom
+
+    return r1, r2
+
 # TODO: Fix this, it's only been copied from prime_generator and had a few
-# variable name changes
+# variable name changes. I.e., I am turning prime_generator into
+# pentagonal_generator but haven't got very far with it yet
 # def pentagonal_generator(n):
+# TODO: move into a pentagonal module
 #     """
 #     generates pentagonals less than or equal to n in order
 #     :param n: upper limit of possible pentagonals, inclusive
