@@ -1,5 +1,6 @@
 __author__ = 'Scott'
 
+
 class Fraction:
     def __init__(self, num, denom):
         self._num = 0

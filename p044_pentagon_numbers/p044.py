@@ -30,23 +30,6 @@ def compute_pentagonal(n):
     return (n * (3 * n - 1)) / 2
 
 
-def is_pentagonal(n):
-    """
-    Determines if n is a pentagonal number
-    :param n: int
-    :return True if n is pentagonal, False otherwise
-    """
-    # TODO: make some unit tests, because this is returning the wrong values
-    # TODO: move into a pentagonal module
-    assert isinstance(n, int), "n must be integer, you sent in {}".format(n)
-    assert n >=1, "n must be >= 1, you sent in {}".format(n)
-    r1, r2 = solve_quadratic(3.5, -1.5, -n)
-    # r1 will be my larger root
-    if r1 > 0 and r1 == int(r1):
-        return True
-    return False
-
-
 def solve_quadratic(a, b, c):
     """
     Solves quadratic equation
@@ -90,5 +73,13 @@ def solve_quadratic(a, b, c):
 
 if __name__ == MAIN_PROCESS:
     pass
-    # pseudocode
-    #
+    # bad pseudocode:
+    # base case: P_j = 1 -> search for first P_j s.t. P_j + P_k = pentagonal and
+    #            P_k - P_j = pentagonal. Set D = P_k - P_j
+    # search:
+    #   for each P_j > 1, conduct the same search as in the base case unless you
+    #       get to a point where P_k - P_j > D
+    # termination:
+    #   P_j+1 - P_j > D
+
+    # My next step is clearly setting up unit tests for is_pentagonal
