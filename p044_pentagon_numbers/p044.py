@@ -12,67 +12,20 @@ difference are pentagonal and D = |P_k - P_j| is minimised; what is the value
 of D?
 """
 
-from constants import MAIN_PROCESS
-import math
+from project_euler import constants
+from project_euler.pentagonal.pentagonal import is_pentagonal,\
+    pentagonal_generator
+from srhpytools_srh.util import mylogging
+import logging
 
 __author__ = 'Scott'
 
+logger = logging.getLogger(__name__)
+mylogging.config_root_file_logger(r'tmp\euler\p044.txt',
+                                  loglevel=logging.DEBUG, logmode='w')
 
-def compute_pentagonal(n):
+def main():
     """
-    Computes n'th pentagonal number
-    :param n: int
-    :return: n't pentagonal number
-    """
-    assert isinstance(n, int), "n must be integer, you sent in {}".format(n)
-    assert n >=1, "n must be >= 1, you sent in {}".format(n)
-
-    return (n * (3 * n - 1)) / 2
-
-
-def solve_quadratic(a, b, c):
-    """
-    Solves quadratic equation
-    :param a: coefficient of x^2
-    :param b: coefficient of x^1
-    :param c: coefficient of x^0
-    :return (r1, r2): roots of quadratic equation
-    """
-    # TODO: make some unit tests
-    radicand = b**2 - 4*a*c
-    assert radicand >= 0, "We don't handle negative determinants"
-    root = math.sqrt(b**2-4*a*c) # seems to always return positive and float
-    denom = 2*a
-    r1 = (-b + root) / denom
-    r2 = (-b - root) / denom
-
-    return r1, r2
-
-# TODO: Fix this, it's only been copied from prime_generator and had a few
-# variable name changes. I.e., I am turning prime_generator into
-# pentagonal_generator but haven't got very far with it yet
-# def pentagonal_generator(n):
-# TODO: move into a pentagonal module
-#     """
-#     generates pentagonals less than or equal to n in order
-#     :param n: upper limit of possible pentagonals, inclusive
-#     :return: yields each pentagonal <= n
-#     """
-#     known_pents = []
-#     i = 0
-#     while i < n:
-#         i += 1
-#         pents_to_check = [kp for kp in known_pents if kp <= i/2]
-#         for prime in pents_to_check:
-#             if i % prime == 0:
-#                 break
-#         else:
-#             known_pents.append(i)
-#             yield i
-
-
-if __name__ == MAIN_PROCESS:
-    pass
     # bad pseudocode:
     # base case: P_j = 1 -> search for first P_j s.t. P_j + P_k = pentagonal and
     #            P_k - P_j = pentagonal. Set D = P_k - P_j
@@ -81,5 +34,62 @@ if __name__ == MAIN_PROCESS:
     #       get to a point where P_k - P_j > D
     # termination:
     #   P_j+1 - P_j > D
+    # TODO: This takes too long, so what I think I should do is generate the
+    # differences between pentagonal numbers, searching through those for a
+    # pentagonal one
+    """
+    last_pent = 0
+    lowest_diff = constants.INFINITY
+    lowgen = pentagonal_generator()
+    p_j = -1
+    p_k = -1
 
-    # My next step is clearly setting up unit tests for is_pentagonal
+    for low in lowgen:
+        pent_diff = low - last_pent
+        last_pent = low
+        if pent_diff > lowest_diff:
+            # can't get a lower one, so answer found
+            logger.debug('pent_diff {} > lowest_diff {}'.format(pent_diff,
+                                                                lowest_diff))
+            break
+
+        last_high = None
+        for high in pentagonal_generator(low, constants.INFINITY):
+
+            if last_high and high - last_high > low:
+                # can't find more since rate of increase of pents always
+                # increasing
+                logger.debug('{} increase of high {} more than low {} so '
+                             'moving to new low'.format(high - last_high,
+                                                        high, low))
+                break
+
+            if high - low > lowest_diff:
+                logger.debug('high {} - low {} > lowest_diff {} so moving to '
+                             'new low'.format(high, low, lowest_diff))
+                break
+            if is_pentagonal(low + high):
+                logger.debug('low {} + high {} is pentagonal'.format(low, high))
+                if is_pentagonal(high - low):
+                    logger.debug(
+                        'high {} - low {} is pentagonal'.format(high, low))
+                    if high - low < lowest_diff:
+                        lowest_diff = high - low
+                        logger.debug('found new lowest_diff {}'.format(
+                            lowest_diff))
+                        p_k = high
+                        p_j = low
+                        break                       # found lowest diff for this low
+                else:
+                    logger.debug('high {} - low {} is not pentagonal'.format(
+                        high, low))
+            else:
+                logger.debug('low {} + high {} is not pentagonal'.format(low,
+                                                                      high))
+            last_high = high
+
+    print "The lowest |D| is {} from P_k {} - P_j {}".format(lowest_diff,
+                                                             p_k, p_j)
+
+if __name__ == constants.MAIN_PROCESS:
+    main()
