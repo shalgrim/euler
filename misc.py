@@ -15,7 +15,7 @@ def solve_quadratic(a, b, c):
     """
     radicand = b**2 - 4*a*c
     assert radicand >= 0, "We don't handle negative determinants"
-    root = math.sqrt(radicand) # seems to always return positive and float
+    root = math.sqrt(radicand)  # seems to always return positive and float
     denom = 2*a
     r1 = (-b + root) / denom
     r2 = (-b - root) / denom
