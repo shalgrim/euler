@@ -58,7 +58,8 @@ def main():
 
             if last_high and high - last_high > low:
                 # can't find more since rate of increase of pents always
-                # increasing
+                # increasing. Ie, adding low to high will not be pentagonal
+                # since the next high is more than low + high
                 logger.debug('{} increase of high {} more than low {} so '
                              'moving to new low'.format(high - last_high,
                                                         high, low))
@@ -88,8 +89,8 @@ def main():
                                                                       high))
             last_high = high
 
-    print "The lowest |D| is {} from P_k {} - P_j {}".format(lowest_diff,
-                                                             p_k, p_j)
+    print("The lowest |D| is {} from P_k {} - P_j {}".format(lowest_diff,
+                                                             p_k, p_j))
 
 if __name__ == constants.MAIN_PROCESS:
     main()

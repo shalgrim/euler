@@ -14,7 +14,7 @@ ONE_MILLION = 1000000
 TEN_MILLION = 10000000
 
 try:
-    INFINITY = math.isinf         # python 3
+    INFINITY = math.inf         # python 3
 except AttributeError:
     INFINITY = float("infinity")  # python 2
 
