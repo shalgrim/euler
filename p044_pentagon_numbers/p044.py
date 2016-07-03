@@ -50,16 +50,24 @@ def find_four_tuple(the_list, the_set):
 
 
 def main():
-    known_pent_set = set()
-    known_pent_list = []
-    for pent in pentagonal_generator():
-        known_pent_list.append(pent)
-        known_pent_set.add(pent)
+    """
+    This approach will track good a+b tuples and only the newest pent for its
+    fitness as a c or d
+    """
+    pass
 
-        four_tuple = find_four_tuple(known_pent_list, known_pent_set)
-        if four_tuple:
-            print(four_tuple)
-            return
+
+# def main():
+#     known_pent_set = set()
+#     known_pent_list = []
+#     for pent in pentagonal_generator():
+#         known_pent_list.append(pent)
+#         known_pent_set.add(pent)
+#
+#         four_tuple = find_four_tuple(known_pent_list, known_pent_set)
+#         if four_tuple:
+#             print(four_tuple)
+#             return
 
 
 # def main():
