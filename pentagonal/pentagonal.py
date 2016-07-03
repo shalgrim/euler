@@ -31,8 +31,8 @@ def is_pentagonal(n):
     :param n: int
     :return True if n is pentagonal, False otherwise
     """
-    assert isinstance(n, int), "n must be integer, you sent in {}".format(n)
-    assert n >=1, "n must be >= 1, you sent in {}".format(n)
+    if not isinstance(n, int): return False
+    if n < 1: return False
     r1, r2 = solve_quadratic(1.5, -0.5, -n)
     # r1 will be my larger root
     if r1 > 0 and r1 == int(r1):

@@ -13,7 +13,7 @@ of D?
 """
 
 from project_euler import constants
-from project_euler.pentagonal.pentagonal import is_pentagonal,\
+from project_euler.pentagonal.pentagonal import is_pentagonal, \
     pentagonal_generator
 from srhpytools_srh.util import mylogging
 import logging
@@ -24,73 +24,127 @@ logger = logging.getLogger(__name__)
 mylogging.config_root_file_logger(r'tmp\euler\p044.txt',
                                   loglevel=logging.DEBUG, logmode='w')
 
+
+def generate_seed_tuples(the_list):
+    """
+    Generates every pair in the_list (a, b) s.t. index(a) < index(b)
+    """
+    for i, a in enumerate(the_list):
+        for b in the_list[i + 1:]:
+            yield (a, b)
+
+
+def find_four_tuple(the_list, the_set):
+    """
+    If there are four numbers in the_set such at a + b = c and b + c = d,
+    this finds them and returns (a, b, c, d)
+    """
+    seeds = generate_seed_tuples(the_list)
+
+    for a, b in seeds:
+        if a + b in the_set:
+            if a + b + b in the_set:
+                return a, b, a + b, a + b + b
+
+    return None
+
+
 def main():
-    """
-    # bad pseudocode:
-    # base case: P_j = 1 -> search for first P_j s.t. P_j + P_k = pentagonal and
-    #            P_k - P_j = pentagonal. Set D = P_k - P_j
-    # search:
-    #   for each P_j > 1, conduct the same search as in the base case unless you
-    #       get to a point where P_k - P_j > D
-    # termination:
-    #   P_j+1 - P_j > D
-    # TODO: This takes too long, so what I think I should do is generate the
-    # differences between pentagonal numbers, searching through those for a
-    # pentagonal one
-    """
-    last_pent = 0
-    lowest_diff = constants.INFINITY
-    lowgen = pentagonal_generator()
-    p_j = -1
-    p_k = -1
+    known_pent_set = set()
+    known_pent_list = []
+    for pent in pentagonal_generator():
+        known_pent_list.append(pent)
+        known_pent_set.add(pent)
 
-    for low in lowgen:
-        pent_diff = low - last_pent
-        last_pent = low
-        if pent_diff > lowest_diff:
-            # can't get a lower one, so answer found
-            logger.debug('pent_diff {} > lowest_diff {}'.format(pent_diff,
-                                                                lowest_diff))
-            break
+        four_tuple = find_four_tuple(known_pent_list, known_pent_set)
+        if four_tuple:
+            print(four_tuple)
+            return
 
-        last_high = None
-        for high in pentagonal_generator(low, constants.INFINITY):
 
-            if last_high and high - last_high > low:
-                # can't find more since rate of increase of pents always
-                # increasing. Ie, adding low to high will not be pentagonal
-                # since the next high is more than low + high
-                logger.debug('{} increase of high {} more than low {} so '
-                             'moving to new low'.format(high - last_high,
-                                                        high, low))
-                break
+# def main():
+#     """
+#     # bad pseudocode:
+#     # base case: P_j = 1 -> search for first P_j s.t. P_j + P_k = pentagonal and
+#     #            P_k - P_j = pentagonal. Set D = P_k - P_j
+#     # search:
+#     #   for each P_j > 1, conduct the same search as in the base case unless you
+#     #       get to a point where P_k - P_j > D
+#     # termination:
+#     #   P_j+1 - P_j > D
+#     # TODO: This takes too long, so what I think I should do is generate the
+#     # differences between pentagonal numbers, searching through those for a
+#     # pentagonal one
+#     """
+#     last_pent = 0
+#     lowest_diff = constants.INFINITY
+#     lowgen = pentagonal_generator()
+#     p_j = -1
+#     p_k = -1
+#
+#     for low in lowgen:
+#         pent_diff = low - last_pent
+#         last_pent = low
+#         if pent_diff > lowest_diff:
+#             # can't get a lower one, so answer found
+#             logger.debug('pent_diff {} > lowest_diff {}'.format(pent_diff,
+#                                                                 lowest_diff))
+#             break
+#
+#         last_high = None
+#         for high in pentagonal_generator(low, constants.INFINITY):
+#
+#             if last_high and high - last_high > low:
+#                 # can't find more since rate of increase of pents always
+#                 # increasing. Ie, adding low to high will not be pentagonal
+#                 # since the next high is more than low + high
+#                 logger.debug('{} increase of high {} more than low {} so '
+#                              'moving to new low'.format(high - last_high,
+#                                                         high, low))
+#                 break
+#
+#             if high - low > lowest_diff:
+#                 logger.debug('high {} - low {} > lowest_diff {} so moving to '
+#                              'new low'.format(high, low, lowest_diff))
+#                 break
+#             if is_pentagonal(high + low):
+#                 logger.debug('low {} + high {} is pentagonal'.format(low, high))
+#                 if is_pentagonal(high - low):
+#                     logger.debug(
+#                         'high {} - low {} is pentagonal'.format(high, low))
+#                     if high - low < lowest_diff:
+#                         lowest_diff = high - low
+#                         logger.debug('found new lowest_diff {}'.format(
+#                             lowest_diff))
+#                         p_k = high
+#                         p_j = low
+#                         break                   # found lowest diff for this low
+#                 else:
+#                     logger.debug('high {} - low {} is not pentagonal'.format(
+#                         high, low))
+#             else:
+#                 logger.debug('low {} + high {} is not pentagonal'.format(low,
+#                                                                       high))
+#             last_high = high
+#
+#     print("The lowest |D| is {} from P_k {} - P_j {}".format(lowest_diff,
+#                                                              p_k, p_j))
 
-            if high - low > lowest_diff:
-                logger.debug('high {} - low {} > lowest_diff {} so moving to '
-                             'new low'.format(high, low, lowest_diff))
-                break
-            if is_pentagonal(low + high):
-                logger.debug('low {} + high {} is pentagonal'.format(low, high))
-                if is_pentagonal(high - low):
-                    logger.debug(
-                        'high {} - low {} is pentagonal'.format(high, low))
-                    if high - low < lowest_diff:
-                        lowest_diff = high - low
-                        logger.debug('found new lowest_diff {}'.format(
-                            lowest_diff))
-                        p_k = high
-                        p_j = low
-                        break                       # found lowest diff for this low
-                else:
-                    logger.debug('high {} - low {} is not pentagonal'.format(
-                        high, low))
-            else:
-                logger.debug('low {} + high {} is not pentagonal'.format(low,
-                                                                      high))
-            last_high = high
-
-    print("The lowest |D| is {} from P_k {} - P_j {}".format(lowest_diff,
-                                                             p_k, p_j))
+# def main():
+#     for high in pentagonal_generator(constants.INFINITY):
+#         for low in pentagonal_generator(high):
+#             if is_pentagonal(high - low):
+#                 logger.debug('high {} - low {} is pentagonal'.format(high, low))
+#
+#                 if is_pentagonal(low + high):
+#                     logger.debug(
+#                         'low {} + high {} is pentagonal'.format(low, high))
+#                 else:
+#                     logger.debug('low {} + high {} is not pentagonal'.format(
+#                         low, high))
+#             else:
+#                 logger.debug('high {} - low {} is not pentagonal'.format(
+#                     high, low))
 
 if __name__ == constants.MAIN_PROCESS:
     main()
