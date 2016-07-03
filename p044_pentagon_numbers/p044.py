@@ -49,13 +49,40 @@ def find_four_tuple(the_list, the_set):
     return None
 
 
+def get_abcs(pentset, new_pent):
+    answer = set()
+    for known_pent in pentset:
+        diff = new_pent - known_pent
+        if diff in pentset:
+            if diff < known_pent:
+                answer.add((diff, known_pent, new_pent))
+            else:
+                answer.add((known_pent, diff, new_pent))
+
+    return answer
+
+
+def find_d(abcs, pent):
+    for a, b, c in abcs:
+        if b + c == pent:
+            return a, b, c, pent
+    return None
+
+
 def main():
     """
     This approach will track good a+b tuples and only the newest pent for its
     fitness as a c or d
     """
-    pass
-
+    pentset = set()
+    abcs = set()
+    for pent in pentagonal_generator():
+        answer = find_d(abcs, pent)
+        if answer:
+            print(answer)
+            return
+        abcs = abcs.union(get_abcs(pentset, pent))
+        pentset.add(pent)
 
 # def main():
 #     known_pent_set = set()
