@@ -24,7 +24,7 @@ def compute_pentagonal(n):
     return (n * (3 * n - 1)) / 2
 
 
-@functools.lru_cache(maxsize=1024)
+#@functools.lru_cache(maxsize=1024)
 def is_pentagonal(n):
     """
     Determines if n is a pentagonal number

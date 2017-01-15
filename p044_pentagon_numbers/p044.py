@@ -62,6 +62,13 @@ def get_abcs(pentset, new_pent):
     return answer
 
 
+def get_abcs(pentset, new_pent):
+    diffs = {new_pent-known_pent:known_pent for known_pent in pentset if
+             new_pent-known_pent in pentset}
+    answer = {(min(k, v), max(k, v), new_pent) for k, v in diffs.items()}
+    return answer
+
+
 def find_d(abcs, pent):
     for a, b, c in abcs:
         if b + c == pent:
