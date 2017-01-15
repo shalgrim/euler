@@ -5,7 +5,7 @@ Stuff I haven't figured out how to factor yet
 import math
 
 
-def solve_quadratic(a, b, c):
+def     solve_quadratic(a, b, c):
     """
     Solves quadratic equation
     :param a: coefficient of x^2

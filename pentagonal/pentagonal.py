@@ -58,3 +58,22 @@ def pentagonal_generator(n=constants.INFINITY, n_with_start=None):
         i += 1
         if is_pentagonal(i):
             yield i
+
+
+def pentagonal_generator_k(n=constants.INFINITY, n_with_start=None):
+    """
+    generates pentagonals less than or equal to P_n, in order
+    :param n: upper limit of possible n, inclusive
+    :param n_with_start: if not None then n is start and this is n
+    :return: yields each pentagonal <= P_n
+    """
+    if n_with_start:
+        real_n = n_with_start
+        i = n
+    else:
+        real_n = n
+        i = 1
+
+    while i < real_n+1:
+        yield (i*(3*i-1))/2
+        i += 1

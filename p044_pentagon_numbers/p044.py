@@ -14,7 +14,7 @@ of D?
 
 from project_euler import constants
 from project_euler.pentagonal.pentagonal import is_pentagonal, \
-    pentagonal_generator
+    pentagonal_generator, pentagonal_generator_k
 from srhpytools_srh.util import mylogging
 import logging
 
@@ -22,7 +22,7 @@ __author__ = 'Scott'
 
 logger = logging.getLogger(__name__)
 mylogging.config_root_file_logger(r'tmp\euler\p044.txt',
-                                  loglevel=logging.DEBUG, logmode='w')
+                                  loglevel=logging.DEBUG, logmode='a')
 
 
 def generate_seed_tuples(the_list):
@@ -50,19 +50,6 @@ def find_four_tuple(the_list, the_set):
 
 
 def get_abcs(pentset, new_pent):
-    answer = set()
-    for known_pent in pentset:
-        diff = new_pent - known_pent
-        if diff in pentset:
-            if diff < known_pent:
-                answer.add((diff, known_pent, new_pent))
-            else:
-                answer.add((known_pent, diff, new_pent))
-
-    return answer
-
-
-def get_abcs(pentset, new_pent):
     diffs = {new_pent-known_pent:known_pent for known_pent in pentset if
              new_pent-known_pent in pentset}
     answer = {(min(k, v), max(k, v), new_pent) for k, v in diffs.items()}
@@ -70,9 +57,8 @@ def get_abcs(pentset, new_pent):
 
 
 def find_d(abcs, pent):
-    for a, b, c in abcs:
-        if b + c == pent:
-            return a, b, c, pent
+    if pent in {b+c for a, b, c in abcs}:
+        return pent
     return None
 
 
@@ -83,13 +69,21 @@ def main():
     """
     pentset = set()
     abcs = set()
-    for pent in pentagonal_generator():
+    abc_size = len(abcs)
+    for pent in pentagonal_generator_k():
         answer = find_d(abcs, pent)
         if answer:
             print(answer)
             return
-        abcs = abcs.union(get_abcs(pentset, pent))
+        abcs.update(get_abcs(pentset, pent))
+
+        if len(abcs) > abc_size and len(abcs) % 1000 == 0:
+            abc_size = len(abcs)
+            logger.info('now {} abcs'.format(abc_size))
+
         pentset.add(pent)
+        if len(pentset) % 10000 == 0:
+            logger.info('now {} pents'.format(len(pentset)))
 
 # def main():
 #     known_pent_set = set()
